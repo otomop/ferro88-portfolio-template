@@ -7,16 +7,9 @@ A standalone HTML, CSS, and JavaScript portfolio with an interactive ferrofluid 
 ## Customize your portfolio
 
 1. Download the template and extract it into a folder, or choose **Use this template** on GitHub to start your own repository.
-2. Edit [`portfolio.js`](./portfolio.js). The display name, bio, skills, philosophy, projects, contact details, and footer live together in `window.PORTFOLIO`. Replace the sample content and leave optional fields empty to hide them.
-3. Put your project files in the same folder or its subfolders. Link to them with relative paths such as `./projects/garden-atlas.html`, or use an HTTPS address for a project hosted elsewhere.
-
-Each item in `projects` represents one row under Works. A project with its own page looks like this.
-
-```js
-{ title: "Garden Atlas", client: "City Museum", role: "Designer", year: "2025", url: "https://example.com/garden-atlas" }
-```
-
-Give a project a `url` to open its page in a new tab. Omit the `url` to keep it as a musical button. Each entry in `socials` takes a `label` and a `url`.
+2. Replace the bracketed placeholders in [`index.html`](./index.html) with your name, bio, skills, philosophy, project details, and contact information. Update the email and social link destinations as well as their visible labels.
+3. Project rows are musical selection buttons. Their rendering and accessibility labels are defined in [`site.min.js`](./site.min.js). Keep those labels consistent with your project details.
+4. Put your project files in the same folder or its subfolders. Use relative paths such as `./projects/project.html`, or HTTPS addresses for files hosted elsewhere.
 
 ## Preview locally
 
