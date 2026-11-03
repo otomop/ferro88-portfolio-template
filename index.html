@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="color-scheme" content="only light">
+<title>FERRO-88</title>
+<style>html,body{margin:0;background:#0b0c0e}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}x-dc{display:none!important}</style>
+<link rel="preload" href="./fonts/michroma-v21-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/jetbrains-mono-v24-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="./fonts/doto-v3-latin.woff2" as="font" type="font/woff2" crossorigin>
+<script defer src="./portfolio.js"></script>
+<script defer src="./ferro88-kit.min.js?v=f1f2b539" onload="F8Boot.mark('kit')"></script>
+<script defer src="./ferro88-entry-dive.min.js?v=2673bdd0" onload="F8Boot.mark('mode')"></script>
+<script defer src="./site.min.js?v=d18801ab" onload="F8Boot.mark('app');var p=document.getElementById('f8-plain');if(p)p.parentNode.removeChild(p)" onerror="F8Boot.plain()"></script>
+<script>window.F8Boot=window.F8Boot||(function(){function painter(o){var c=o.canvas,post=o.post,gl=c.getContext('webgl',{alpha:true,antialias:false,depth:false,stencil:false,premultipliedAlpha:true,powerPreference:'high-performance'});if(!gl){post({k:'fail'});return function(){};}
+var FS=['precision highp float;','uniform vec2 R;uniform float D,T,A,HA,RH,TX,HX,BT,BO;uniform vec3 B,S0,S1,G0,G1,IN,N,K0,K1,K2,K3;','float h(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}','float ss(float a,float b,float x){float t=clamp((x-a)/(b-a),0.,1.);return t*t*(3.-2.*t);}','vec3 aces(vec3 x){return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.,1.);}','vec3 tone(vec3 x){vec3 k=vec3(.72);return mix(x,k+(1.-k)*(1.-exp(-(x-k)/(1.-k))),step(k,x));}','float ip(float x,float a,float b,float t){float n=floor(x/t);return n*(b-a)+clamp(x-n*t-a,0.,b-a);}','float box(float x,float a,float b,float t){return ip(x+.5,a,b,t)-ip(x-.5,a,b,t);}','vec3 mask(vec2 s,float P){float g=.035,yt=R.y-s.y;float x0=box(s.x,g*P,(.5-g)*P,P),x1=box(s.x,(.5+g)*P,(1.-g)*P,P),y0=box(yt,g*P,(.5-g)*P,P),y1=box(yt,(.5+g)*P,(1.-g)*P,P);vec3 av=(K0+K1+K2+K3)*.25;return (x0*y0*K0+x1*y0*K1+x0*y1*K2+x1*y1*K3)/av+vec3(1.-(x0+x1)*(y0+y1));}','float rb(vec2 p,vec2 c,vec2 s,float f){vec2 d=abs(p-c)-s;float e=length(max(d,0.))+min(max(d.x,d.y),0.);return 1.-smoothstep(-f,f,e);}','float rr(vec2 p,vec2 c,vec2 s,float r,float f){vec2 d=abs(p-c)-s+r;float e=length(max(d,0.))+min(max(d.x,d.y),0.)-r;return 1.-smoothstep(-f,f,e);}','vec3 env(vec3 d){vec3 c=G0*(.06+.62*exp(-abs(d.y-.02)*3.2));c*=mix(.55,1.,smoothstep(-.6,0.,d.y));','if(d.y>0.){vec2 q=d.xz/d.y;c+=vec3(8.5)*(1.-.3*length((q-vec2(-.35,.95))/vec2(.75,.4)))*rr(q,vec2(-.35,.95),vec2(.75,.4),.3,.05);}','if(d.x<0.){vec2 q=d.yz/(-d.x);c+=vec3(6.5)*rb(q,vec2(.95,1.35),vec2(.45,.05),.01);c+=vec3(.9)*rb(q,vec2(-.1,-.2),vec2(.9,.6),.5);}','if(d.x>0.){vec2 q=d.yz/d.x;c+=mix(vec3(4.5),G1*7.,.55)*.33*rb(q,vec2(-.25,-.35),vec2(1.,.09),.06);}','if(d.z<0.){vec2 q=d.xy/(-d.z);c+=vec3(2.6)*rb(q,vec2(.75,.6),vec2(.4,.95),.25);}return c;}','void main(){','vec2 uv=gl_FragCoord.xy/R,c=uv*2.-1.,K=c*(1.+.05*vec2(c.y*c.y,c.x*c.x));','vec2 hp=R*.5/D,p=vec2(K.x*hp.x,K.y*hp.y);vec2 cp=vec2(gl_FragCoord.x,R.y-gl_FragCoord.y)/D;','vec3 g=mix(vec3(.0125,.014,.0165),vec3(.0032,.0036,.0044),ss(.08,1.3,length(c*vec2(1.,.92))));','float sheen=rr(c,vec2(-.46,.5),vec2(.42,.26),.24,.5);','float t=T,str=clamp((t-.12)/.28,0.,1.),Lx=mix(1.2,hp.x+90.,1.-pow(1.-str,2.8));','float I=ss(0.,.12,t)*(1.6+5./(1.+Lx*.03))*(1.-ss(.46,.72,t));','float dx=max(abs(p.x)-Lx,0.),d2=dx*dx+p.y*p.y,hr=(sqrt(d2)-46.)/16.;','vec3 tint=vec3(.84,.92,1.);','float tap=.45+.55*ss(4.,80.,Lx)*(1.-min(abs(p.x)/max(Lx,1.),1.));vec3 li=(exp(-d2/(1.6+5.*ss(.26,.4,t)))*3.2*tap+.42*tap/(1.+d2/170.)+.01/(1.+d2/9000.)+.006*exp(-hr*hr))*I*tint;','float o=clamp((t-.34)/.62,0.,1.),Hb=mix(.4,hp.y*1.5,pow(1.-pow(1.-o,2.4),1.6)),e0=max(t-.34,0.),on=ss(.34,.4,t);','float vh=7.*exp(-e0/.16)*sin(e0*30.)*on,y=abs(p.y+vh),f=3.+Hb*.14,band=(1.-ss(Hb-f,Hb+f,y))*on;','float ex=1.+3.2*exp(-Hb/(hp.y*.22))+.3*exp(-e0/.45);ex*=1.+.25*exp(-e0/.3)*exp(-dot(c,c)*1.3);','float sv=smoothstep(0.,.42,1.-uv.y);vec3 sky=pow(mix(S0,S1,sv),vec3(2.2));','float fall=mix(.34+.66*exp(-y*y/(Hb*Hb*.34+30.)),1.,ss(.12,.42,e0));vec3 ra=sky*ex*fall;','vec2 wq=c*1.25+.5*vec2(sin(e0*2.1+c.y*2.),cos(e0*1.7-c.x*1.5));vec3 pu=mix(mix(K0,K1,ss(-1.,1.,wq.x)),mix(K2,K3,ss(-1.,1.,wq.x)),ss(-1.,1.,wq.y));ra*=mix(vec3(1.),pu/dot(pu,vec3(.2126,.7152,.0722)),.85*exp(-e0/.55));','float rl=(uv.y-(1.3-max(t-.74,0.)*1.5))/.15;ra*=1.+.05*exp(-rl*rl);','float out_=max(y-Hb,0.);vec3 col=g*(1.-band)+ra*band+li+tint*(1.-band)*on*exp(-e0/.16)*(.22/(1.+out_*out_/1600.)+.02/(1.+out_*out_/40000.));','col+=sheen*vec3(.0085,.0095,.0115)*(1.-band)*(1.+I*.5);','col=pow(tone(max(col,0.)),vec3(1./2.2));','col+=(h(vec2(floor(gl_FragCoord.x/(5.*D)),floor(gl_FragCoord.y/N.x))+fract(t*37.)*91.)-.5)*.05*exp(-e0/.22)*band;','vec2 q=uv-.5;col*=1.-.6*(1.21*q.x*q.x+q.y*q.y);','col*=mix(vec3(1.),mask(gl_FragCoord.xy,N.x),.1+.26*exp(-e0/.28)*band);','float tA=ss(.5,.7,t),tw=mix(hp.x+40.,B.z*.5,ss(.6,1.02,t)),bx=cp.x-B.x-B.z*.5,by=cp.y-B.y;','float tr=step(abs(by)*D,D<2.5?.5:1.5)*(1.-ss(tw-6.,tw,abs(bx)))*tA*mix(.55,.26,ss(.95,1.35,t))*A;col=mix(col,IN,tr);','vec2 e=max(abs(K)-.95,0.);col*=1.-ss(.02,.05,length(e));','col+=(h(gl_FragCoord.xy+fract(t*7.31)*917.)-.5)*.03*min(band+.3,1.)+(h(gl_FragCoord.xy*1.371+3.1)-.5)/255.;','float row=mod(floor(R.y-gl_FragCoord.y),N.x)>=N.x-N.y?1.-N.z:1.;','vec4 O=vec4(col*row*A,A);','if(RH>0.&&HA>0.&&abs(by)<RH+6.&&cp.x>B.x-RH-8.&&cp.x<B.x+B.z+RH+8.){','float x=cp.x,bv=by-BO,dsg=length(vec2(x-clamp(x,TX,HX),bv))-BT,cb=clamp(.5-dsg*D,0.,1.)*HA;','O=vec4(mix(O.rgb,IN*row,cb),O.a+(1.-O.a)*cb);','vec2 qc=vec2(x-HX,bv);float cov=clamp(.5-(length(qc)-RH)*D/1.3,0.,1.)*HA;','if(cov>0.){vec2 nq=qc/max(RH,.01);vec3 n2=vec3(nq.x,-nq.y,sqrt(max(1.-dot(nq,nq),.02)));','vec3 rd=normalize(vec3((x-hp.x)/1100.,(hp.y-cp.y)/1100.-.1,-1.));','float nv=clamp(dot(n2,-rd),0.,1.),F=.05+.95*pow(1.-nv,5.);','vec3 li2=aces(vec3(.006,.006,.007)+env(reflect(rd,n2))*F);li2=min(pow(li2,vec3(1./2.2)),vec3(.84))*row;','float fl=ss(RH,RH*2.2,HX-TX)*ss(.2,.95,-nq.x)*(1.-ss(BT/RH,.72,abs(nq.y)));li2=mix(li2,IN*row,fl*.9);','O=vec4(mix(O.rgb,li2,cov),O.a+(1.-O.a)*cov);}','}','gl_FragColor=O;}'].join('\n');function sh(t,s){var x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);return x;}
+var P=gl.createProgram();gl.attachShader(P,sh(gl.VERTEX_SHADER,'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));gl.attachShader(P,sh(gl.FRAGMENT_SHADER,FS));gl.bindAttribLocation(P,0,'a');gl.linkProgram(P);if(!gl.getProgramParameter(P,gl.LINK_STATUS)){post({k:'fail',log:String(gl.getProgramInfoLog(P)).slice(0,300)});return function(){};}
+gl.useProgram(P);gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);gl.disable(gl.BLEND);var U={};['R','D','T','A','HA','RH','TX','HX','BT','BO','B','S0','S1','G0','G1','IN','N','K0','K1','K2','K3'].forEach(function(n){U[n]=gl.getUniformLocation(P,n);});['S0','S1','G0','G1','IN','K0','K1','K2','K3'].forEach(function(n){gl.uniform3fv(U[n],o.col[n]);});var X0=0,BY=0,BO=0,BH=1,BW=1,goal=0,hx=0,hv=0,t0=0,last=0,tr0=0,dead=false,uiSent=false,beadSent=false,goneSent=false,arrived=false,hasFirst=false,quiet=false,pending=false,lastAt=0,sentAt=-1,dpr=1;
+function size(m){dpr=m.D;var width=Math.max(2,Math.round(m.W*dpr)),height=Math.max(2,Math.round(m.H*dpr));
+if(c.width!==width)c.width=width;if(c.height!==height)c.height=height;gl.viewport(0,0,c.width,c.height);gl.uniform2f(U.R,c.width,c.height);gl.uniform1f(U.D,m.D);var pd=Math.max(2,Math.round(3*m.D)),bd=Math.max(1,Math.round(m.D));gl.uniform3f(U.N,pd,bd,Math.min(0.2,0.03*pd/bd));var yd=Math.floor(m.y*m.D)+0.5,td=Math.max(1,Math.round(m.w*0.0096*m.D));BO=td%2?0:0.5/m.D;gl.uniform1f(U.BO,BO);BH=td/(2*m.D);X0=m.x;BY=yd/m.D;BW=Math.max(1,m.w);gl.uniform3f(U.B,X0,BY,BW);gl.uniform1f(U.BT,td/(2*m.D));}
+size(o);function ss(a,b,x){var t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);}
+function schedule(){if(pending||dead||quiet)return;pending=true;if(self.requestAnimationFrame)self.requestAnimationFrame(frame);else setTimeout(function(){frame(performance.now());},16);}
+function frame(now){pending=false;if(dead||quiet)return;schedule();if(!t0)t0=now,last=now;
+var dt=Math.min(0.05,Math.max(0,(now-last)/1000));last=now;var T=(now-t0)/1000-0.04;if(!uiSent&&T>=0.62){uiSent=true;post({k:'ui'});}
+var R0=Math.max(7,Math.min(12,BW*0.0262)),born=Math.max(0,T-0.98),Rb=born<=0?0:R0*(1-Math.exp(-born*7)*Math.cos(born*11));var w=goal>=0.9995?13:7.5;hv+=(w*w*(goal*BW-hx)-2*w*hv)*dt;hx+=hv*dt;if(hx>BW){hx=BW;hv=0;}
+if(now-lastAt>70&&Math.abs(hx-sentAt)>0.5){lastAt=now;sentAt=hx;post({k:'at',p:hx/BW});}
+if(!arrived&&goal>=0.9995&&Math.abs(hx-BW)<3){arrived=true;post({k:'arrived'});}
+var hd=R0+hx*(BW-2*R0)/BW;var a=ss(-0.04,0.16,T),ha=1,rh=Rb,tx=X0+BH+(hd-BH)*(1-ss(0,0.2,born));if(tr0){var r=(now-tr0)/1000,e=ss(0,0.38,r);a=1-ss(0.02,0.36,r);rh=R0*(1+0.42*ss(0.05,0.4,r));tx=X0+BH+(hd-BH)*e;if(!beadSent&&r>=0.42){beadSent=true;post({k:'bead',x:X0+hd,y:BY+BO,r:rh});}
+ha=1-ss(0.45,0.51,r);if(r>=0.52){if(!goneSent){goneSent=true;post({k:'gone'});}}}
+gl.uniform1f(U.T,T);gl.uniform1f(U.A,a);gl.uniform1f(U.HA,ha);gl.uniform1f(U.RH,rh);gl.uniform1f(U.TX,tx);gl.uniform1f(U.HX,X0+hd);
+// Once the tube is transparent only the bar and bead can contribute pixels.
+if(tr0&&a===0){
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  if(ha>0){
+    var left=Math.floor((X0-rh-8)*dpr),right=Math.ceil((X0+BW+rh+8)*dpr);
+    var bottom=Math.floor(c.height-(BY+rh+6)*dpr),top=Math.ceil(c.height-(BY-rh-6)*dpr);
+    gl.enable(gl.SCISSOR_TEST);gl.scissor(left,bottom,right-left,top-bottom);
+    gl.drawArrays(gl.TRIANGLES,0,3);gl.disable(gl.SCISSOR_TEST);
+  }
+}else gl.drawArrays(gl.TRIANGLES,0,3);
+if(!hasFirst){hasFirst=true;post({k:'first'});}}
+schedule();return function(m){if(m.k==='p'){goal=Math.max(goal,m.p);}
+else if(m.k==='size')size(m);else if(m.k==='quiet'){if(quiet&&!m.on)last=performance.now();quiet=m.on;schedule();}else if(m.k==='reveal'){if(quiet)last=performance.now();quiet=false;tr0=performance.now();schedule();}
+else if(m.k==='stop'){dead=true;var x=gl.getExtension('WEBGL_lose_context');if(x)x.loseContext();}};}
+var STEPS=[['page',0.05],['kit',0.17],['mode',0.1],['app',0.08],['fonts',0.1],['shaders',0.28],['frame',0.14],['fx',0.08]];var CH={about:'pearl',philosophy:'fluorite',works:'glacier',contact:'phosphor'};var THEME={pearl:{S0:'#d2d4d7',S1:'#d6d7da',IN:'#15161a',G0:'#bec1c8',G1:[0.88,0.94,1]},fluorite:{S0:'#dbd6e6',S1:'#ded9e8',IN:'#282035',G0:'#d4c6ee',G1:[0.87,0.8,1]},glacier:{S0:'#c6dbe7',S1:'#cbdee8',IN:'#082534',G0:'#a7d5f4',G1:[0.66,0.84,1]},phosphor:{S0:'#c8ddd6',S1:'#cedfd9',IN:'#0d2b21',G0:'#a9d8c3',G1:[0.75,1,0.88]}};var LIT={pearl:[0.95,0.94,0.96],glacier:[0.71,0.86,0.98],fluorite:[0.85,0.79,0.98],phosphor:[0.71,0.91,0.82]};var BAR_FROM=1020,BAR_MIN=640;var el,mark,bar,num,cap,shown=0,done={},t0=0,tLast=0,full=false,holdUntil=0,fullCb=null,timer=0,stalled=false,sheet=false,send=null,worker=null,gl=false,onBead=null,beadWait=null,css=false,started=false;var fill,bead,bw=0;function now(){return window.performance&&performance.now?performance.now():Date.now();}
+function q(s){return el.querySelector(s);}
+function hex(h){return[1,3,5].map(function(i){var c=parseInt(h.substr(i,2),16)/255;return c;});}
+function lin(h){return hex(h).map(function(c){return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);});}
+var channel='pearl';try{var h0=window.top===window?(location.hash||'').slice(1):'';if(CH[h0]){channel=CH[h0];var rs=document.documentElement.style;rs.setProperty('--b-top',THEME[channel].S0);rs.setProperty('--b-sky',THEME[channel].S1);rs.setProperty('--b-ink',THEME[channel].IN);}}catch(e){}
+function colours(){var t=THEME[channel],ks=['about','philosophy','works','contact'].map(function(n){var c=LIT[CH[n]],l=0.2126*c[0]+0.7152*c[1]+0.0722*c[2];return c.map(function(x){return l+(x-l)*0.8;});});return{S0:hex(t.S0),S1:hex(t.S1),IN:hex(t.IN),G0:lin(t.G0),G1:t.G1,K0:ks[0],K1:ks[1],K2:ks[2],K3:ks[3]};}
+function geom(){var b=bar.getBoundingClientRect();return{W:window.innerWidth,H:window.innerHeight,D:Math.min(3,window.devicePixelRatio||1),x:b.left,y:b.top+b.height/2,w:b.width};}
+function scan(){var d=window.devicePixelRatio||1,p=Math.max(2,Math.round(3*d)),b=Math.max(1,Math.round(d)),a=Math.min(0.2,0.03*p/b).toFixed(3);return'repeating-linear-gradient(rgba(0,0,0,0) 0 '+(p-b)/d+'px, rgba(0,0,0,'+a+') '+(p-b)/d+'px '+p/d+'px)';}
+function target(t){var sum=0,next=null;for(var i=0;i<STEPS.length;i++){if(done[STEPS[i][0]])sum+=STEPS[i][1];else if(!next)next=STEPS[i];}
+if(!next)return{p:1};return{p:sum+next[1]*0.86*(1-Math.exp(-(t-tLast)/1500))};}
+function finishBar(dwell){if(full)return;full=true;holdUntil=now()+dwell;
+var cb=fullCb;fullCb=null;if(cb)cb(dwell);}
+function heard(m){if(m.k==='first'){if(css)return;gl=true;if(!started){started=true;t0=tLast=now();el.classList.add('is-gl');tick();}}
+else if(m.k==='at')words(m.p);else if(m.k==='fail'){if(window.console&&m.log)console.warn('[F8Boot] '+m.log);useCss();}
+else if(m.k==='ui'){el.classList.add('is-ui');setTimeout(function(){if(el)el.classList.add('is-locked');},1300);}
+else if(m.k==='arrived')finishBar(400);
+else if(m.k==='bead'){var f2=onBead;onBead=null;if(f2)f2(m.x,m.y,m.r);}
+else if(m.k==='gone'){if(send)send({k:'stop'});if(worker)setTimeout(function(){worker.terminate();worker=null;},200);}}
+function useCss(){if(gl||css)return;css=true;if(worker){worker.terminate();worker=null;}send=null;el.classList.add('is-css');q('.f8-b-glass').style.background=scan();if(!started){started=true;t0=tLast=now();tick();}
+setTimeout(function(){if(el){el.classList.add('is-ui');el.classList.add('is-locked');}},1000);}
+function startPicture(){var cv=q('.f8-b-gl'),reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduce||!cv){useCss();return;}
+var g=geom(),init={k:'init',W:g.W,H:g.H,D:g.D,x:g.x,y:g.y,w:g.w,col:colours()},mainThread=function(){init.canvas=cv;init.post=heard;try{var P=painter(init);if(!css)send=P;}catch(e){useCss();}};if(cv.transferControlToOffscreen&&window.Worker&&window.Blob&&window.URL){var w,url,said=false;try{url=URL.createObjectURL(new Blob(['var P,F='+painter+';onmessage=function(e){var m=e.data;if(m.k==="init"){m.post=function(x){postMessage(x)};P=F(m);return}if(P)P(m)};postMessage({k:"hi"});'],{type:'text/javascript'}));w=new Worker(url);}catch(e){w=null;}
+function releaseUrl(){if(url){URL.revokeObjectURL(url);url=null;}}if(w){var nope=setTimeout(function(){if(!said){said=true;releaseUrl();try{w.terminate();}catch(e){}mainThread();}},220);w.onerror=function(){releaseUrl();if(!said){said=true;clearTimeout(nope);try{w.terminate();}catch(e){}mainThread();}else useCss();};w.onmessage=function(e){if(e.data.k==='hi'){if(said)return;said=true;releaseUrl();clearTimeout(nope);worker=w;try{var off=cv.transferControlToOffscreen();init.canvas=off;w.postMessage(init,[off]);send=function(m){w.postMessage(m);};}catch(x){worker=null;w.terminate();mainThread();}}else heard(e.data);};}else{releaseUrl();mainThread();}}else mainThread();setTimeout(function(){if(!gl&&!css){if(send){try{send({k:'stop'});}catch(e){}}cv.style.display='none';useCss();}},1600);}
+function words(p){var pc=String(Math.round(p*100));if(num.textContent!==pc){num.textContent=pc;el.setAttribute('aria-valuenow',pc);}
+var said=p>=0.995?'Ready':p>=0.4?'Tuning the droplet':'Warming up the tube';if(cap.textContent!==said)cap.textContent=said;}
+function tick(){timer=0;if(!el||full)return;var t=now(),g=Math.max(0,Math.min(1,(t-t0-(css?1080:BAR_FROM))/(css?820:BAR_MIN))),T=target(t),p=Math.min(T.p,g*g*(3-2*g));if(p>shown){shown=p;if(send)send({k:'p',p:p});if(css){fill.style.transform='scaleX('+p.toFixed(4)+')';bead.style.transform='translate3d('+(p*(bw-18)).toFixed(1)+'px,0,0)';words(p);}}
+if(shown>=0.9995){if(send)send({k:'p',p:1});if(css||!send){finishBar(300);return;}
+setTimeout(function(){if(!full)heard({k:'arrived'});},1400);return;}
+timer=setTimeout(tick,stalled?400:110);}
+return{attach:function(node){if(el||!node)return;el=node;mark=q('.f8-b-mark');bar=q('.f8-b-bar');fill=q('.f8-b-fill');bead=q('.f8-b-bead');num=q('.f8-b-num');cap=q('.f8-b-text');bw=bar.offsetWidth;tLast=now();this.mark('page');window.addEventListener('resize',function(){if(full)return;bw=bar.offsetWidth;if(send){var g=geom();g.k='size';send(g);}});setTimeout(function(){F8Boot.mark('fonts');},2500);setTimeout(function(){F8Boot.mark('shaders');F8Boot.mark('frame');F8Boot.mark('fx');},12000);setTimeout(function(){if(el)el.classList.add('is-type');},850);if(sheet)F8Boot.fontSheet();setTimeout(function(){if(!done.app)F8Boot.plain();},20000);startPicture();},fontSheet:function(){sheet=true;if(!el)return;var f=function(){if(el)el.classList.add('is-type');F8Boot.mark('fonts');};if(document.fonts&&document.fonts.load)Promise.all(['32px Michroma',"400 12px 'JetBrains Mono'",'900 18px Doto'].map(function(x){return document.fonts.load(x);})).then(f,f);else f();},oldCheck:function(){try{new Function('var a;return a?.b??1');}catch(e){document.addEventListener('DOMContentLoaded',F8Boot.plain);}},plain:function(){var go=function(){if(document.getElementById('f8-plain'))return;var d=document.createElement('div');d.id='f8-plain';d.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;z-index:30;overflow:auto;padding:32px;background:#d6d7da;color:#15161a;font:16px/1.5 sans-serif';var profile=window.PORTFOLIO||{},title=document.createElement('h1'),message=document.createElement('p');
+title.style.cssText='font-size:28px;margin:0 0 12px';title.textContent=profile.name||'FERRO-88';
+message.textContent='This browser could not start the interactive portfolio.';
+d.appendChild(title);d.appendChild(message);
+if(typeof profile.email==='string'&&profile.email.trim()){var contact=document.createElement('p');contact.textContent=profile.email;d.appendChild(contact);}
+document.body.appendChild(d);};if(document.body)go();else document.addEventListener('DOMContentLoaded',go);},mark:function(name){if(done[name])return;done[name]=1;tLast=now();stalled=false;if(el&&started&&!timer&&!full)tick();},stall:function(){if(!el||full)return;stalled=true;var p=Math.max(shown,Math.min(0.9,target(now()).p+0.22));if(send)send({k:'p',p:p});if(css){fill.style.transition=bead.style.transition='transform 3.5s cubic-bezier(.2,.6,.3,1)';fill.style.transform='scaleX('+p.toFixed(4)+')';bead.style.transform='translate3d('+(p*(bw-18)).toFixed(1)+'px,0,0)';}
+shown=p;},quiet:function(on){if(send)send({k:'quiet',on:on});},hasPainter:function(){return gl;},beadAt:function(){var b=bar.getBoundingClientRect();return{x:b.right-12,y:b.top+b.height/2,r:12};},whenFull:function(cb){if(full)setTimeout(function(){cb(Math.max(0,holdUntil-now()));},0);else fullCb=cb;},reveal:function(o){if(!el){if(o.arrive)o.arrive();if(o.brand)o.brand();if(o.end)o.end();return;}
+el.classList.add('is-reveal');if(!o.live||!gl){el.classList.add('is-fade');if(o.arrive)o.arrive();if(o.brand)o.brand();setTimeout(function(){el.style.display='none';if(send)send({k:'stop'});if(worker){worker.terminate();worker=null;}if(o.end)o.end();},620);return;}
+el.classList.add('is-locked');var B=o.brandEl&&o.brandEl.getBoundingClientRect(),M=mark.getBoundingClientRect();if(B&&B.width){var s=parseFloat(getComputedStyle(o.brandEl).fontSize)/parseFloat(getComputedStyle(mark).fontSize);mark.style.transformOrigin='0 0';mark.style.transition='transform 1.05s cubic-bezier(.4,0,.25,1)';mark.style.transform='translate3d('+(B.left-M.left).toFixed(2)+'px,'+(B.top-M.top).toFixed(2)+'px,0) scale('+s.toFixed(5)+')';}
+var contentReady=false;
+function allowInput(){if(contentReady&&!onBead)el.style.pointerEvents='none';}
+onBead=function(x,y,r){if(o.bead)o.bead(x,y,r);allowInput();};send({k:'reveal'});setTimeout(function(){if(onBead){var at=F8Boot.beadAt();heard({k:'bead',x:at.x,y:at.y,r:at.r});}},900);setTimeout(function(){if(o.arrive)o.arrive();contentReady=true;allowInput();},o.arriveAt||620);setTimeout(function(){mark.style.visibility='hidden';if(o.brand)o.brand();},1090);setTimeout(function(){el.style.display='none';if(o.end)o.end();},2000);}};})();</script>
+<script>try{new Function("class A{}var b=()=>`1`")}catch(e){document.addEventListener("DOMContentLoaded",F8Boot.plain)}</script>
+<link rel="icon" href="data:,">
+<style>:root{--f8-edge:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAACgCAQAAABJEHq3AAAIQUlEQVR42u2du5LjNhaGP4LiRZd2OXPgdbnKuSP7BfwQm89LOt7AqTPnTrwOnE7rRkoiHQAkAEmzWzVV2zvD8x8UwW61RNXg/3gO8FMjFox8PjEC49zH/fOWP4tsi8cDKOZHimyb+rh/3vJnpcf75GP1ZtKNDIwMDNwYuCXtmm2Pvd9uyX46wjBveRvnbeqfgXAfz4QvcHPvt7yV8zb1JSWrZO+3xz5usfljufldP1kAxjC0kyxXrlyS1tOHvk9+nnr/jEt4jX/to9iTxPeyPp7lUc63ymbFE2TSdo9KikcKRRX6ihUVNRUVFTV11tfZI7GtAkz+6MXHIVM8HbQL50TKno6ejjNd6M/Zbz0dXSL2JQh7yeScRBw/q6Lz1jEBFMHxuFQBlCqBoqGhpqGlCX2b/VbTzPBUVLRU/x2Akd/5ld/4i3NoXZC4n4W9zpJKzE8FmgmX1QxKHRBoaEP7iu/5ke/u80SaUI/8zDu+pdSoLjBKvuUdP3PMi2j88cYvvONLjdSC40ve8Qu3qLpL/njiT/7gVaO04HjlD/7kFB9IAeh5z55Bo7TgGNjznv45AGdeOWhat+gYOfDK+TkAJ17T5KBYZNypnAJwFABGADg+A2DkmCcHxSLjzCvHWOhdMj04sE+nB4pFRs+eQ5zqRwBuHNhz0QgtPC7sOXB7BMD/4aoRWnhc8xPdfSg1KBbrBGSlPgLQseckF8CAE3BiT/cIwJm9FoFGFoL7uNpLAThoEWhkIXh4BsAx5UKxaAD20QpySWU4yAUw4gQc4mzPzS7AkaNcACNOwJHj5AS4eXV45CgXwIgTkGgtAATAnBZOsoGwYQWdYrl388TgKBsIO1bQcZrwu9kHlAtgywno7gE4RntQsfBI1I4AnASAIQBO9wCcY1VQsHwr6DgVfBfmhWdOsoGwYwWdOPs1XwqAXAA7TsAdADdOAsAYACdvBrvwwJlz/JyYYuFx48zZn/ARgE4+IHa8wO4egLkmKEwAMM/53PyNIJ2MYOyYwR1nv+qLAMgFsOUEZAD0AsAgAH0OgGwgTFlBdwB0AsAYAF0EYFQGMJoBxghAJx8QW15glwPQCwBjAPQRgIGeTkYwtszgjp4hAtDLB8SWF9hHAG709MoAxjJA0DwCoAxgLwMkAFx0JQBbVwMuKQAXAWAQgIsygDIADsIdOwSALQC86nMGkA2EQSsomQMIAHsAXPISoLAHwFwCrrKBsGcFXdMMIADsAaAMoAwwZQABYBOAKzhGblx1JQB7VwOu3PxdwwSAXQBCBrgJAIMA3HwGEADGAUAAGAYAF24Dr0tBmLscdGOIJUAAWAQgzAEGBpUAgyVgmDKASoDpEoDOf8M5IEwCR2UAgxlgjCVgEAAGARimEqDz324OwE2pQONhMAOMUwmQ/GYRcDEZKOwVgOn7ARRWIQhzACFgNQeMTuNgOwSAAFAIAIUAUFgFoKCg0EAYjIKCwoHkN4xAKAHKATbP/1ACnOQ3ioCj8HMAIWBU/mkOIPnNFgFfApQBbGaAUAKccoDR89/5EuBkB2HTA3JTCSiVAQxmgDKWAOUAm+d/AKBUBjCaAcopAwgAwyUASkqVAIMloKT0k0ABYBeAQgCYBwBKVgLAIACrWAIEgFUACgesPAsKU1GyYuU/EFIKAKMAlB6AFZUAMAhApQygDDBngJVGxFis0gwgAGwCUE4A1ALAIAB1XgJ0OQhTl4KyElBTCQBjAFQxA5RUAsAgANkcQACYzgA1ta4GYOtKQH0PgKwgTNlACQBOGcBoBnARgEYZwFgGaCIABbWsIOzZQPX0/QAFNY0AMAZAkwPQUmlUDEVFGwGAmkYAGAOgoY7fEqYMYDMDZADUGhVDUecAVALAIABVDkCjqwHYuRLQ5ACsWNPKC8SOD9iy9gv/CYCWRgAYAqChvQeglRmMHSO4zQEoWU8pQYEFH3DN2p/w7r4mKIwAEOZ8KQCygjBjA90BAC0bOQGGXIANbX7DiIY1jUbGSCRqRwA2AsAQAJtHALZTUlAsPlq29wDUbFjLDMaGEbyOMz43zws3rOUFYsMHXLOZ1nxuXhlu2MgJMOICJFoLAAEAQMkmpgUFy7aBNmymKz8umRhsZQVhwwbaxgl/nPZt2GkhaGQRuGPzeOvYVk6AIRegfQbAjrVGx0Cs01zvEntwJysIGzbQLtr+Lpka7NjKCmL5NtCWXZzuu2RxsGMrJ8CAC7BlFxf8LvmcWPYHxWJdgB3b+PlP96HUoFisC5CVepdMDja8aCFoYBH4wiZO9tNJ34YXLQQNLAJfog2UA7AWAEYAWD8HoOWFrZyAhbsA27zQu2x68AU7OQELdwF2fJFO9fMS8DXf8KJRWnC88A1fpyVgldHxA++Bf/Fvbhorlvc/Av/BT/yTH9LTvmDMnjTyO7/yG39xDq2jo6ej58KFC1eu3LgxMDDevVrx/6nr/g7wZbgTWEVFRU1DTUNDG9pXfM+PfJfP8oqnEl44B7l7+iB/F2A4J5vv+wCJb5cZlAu3AIvHZUJG0PxnMYtwa3cvqb+3TzULW1GH1gSJ2yBz3HzvEaipw+uefg9U8VFyeBmHIO6VK9dZ+Amby4xEnz0yPeMSXuNf6/PKNUMmBcfDMwEUG/NGsv/fyxT3xSxbbC4RcRIylXM1n6vTGbuimoXyksW+zh6JbRXu+OiP7t/5I/4pbzNoY5BvYJjFvc0ApdtjH6G4zq8Z5n64wySiMszvGmG5R+Ze1klOMjEnSXNZvbRuFneSuJxlScW+7+MWmz+Wm9/1TVj+nBJyKmK6f974gPBjdrz0jE4hyEF4PMvTlj+Lz8lL+RtlqQrEM92vWAAAAABJRU5ErkJggg==);--edge-x:max(calc(3.1vw + clamp(18px,1.9vw,28px)),env(safe-area-inset-left,0px),env(safe-area-inset-right,0px));--edge-y:max(calc(3.4vh + clamp(18px,2.4vh,28px)),env(safe-area-inset-top,0px));--edge-b:max(calc(3.4vh + clamp(18px,2.4vh,28px)),env(safe-area-inset-bottom,0px))}body{margin:0;background:#0b0c0e}a{color:inherit}.f8 *,.f8-boot,.f8-boot *{box-sizing:border-box}.f8-boot{position:fixed;top:0;right:0;bottom:0;left:0;z-index:20;overflow:hidden;contain:strict;color:var(--b-ink,#15161a);background:radial-gradient(110% 110% at 50% 46%,#26292d 0,#16181b 58%,#0a0b0d 100%);font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;-webkit-user-select:none;user-select:none;--bw:clamp(236px,31vw,470px)}.f8-b-gl{position:absolute;top:0;left:0;width:100%;height:100%;display:block}.f8-b-ui{position:absolute;left:50%;top:50%;width:var(--bw);height:0;margin-left:calc(var(--bw) / -2)}.f8-b-mark{position:absolute;left:-.102em;bottom:30px;font-family:'Michroma',sans-serif;font-size:calc(var(--bw) / 7.89);letter-spacing:.12em;white-space:nowrap;will-change:transform}.f8-b-mark>span{display:block}.f8-b-ink{opacity:0;visibility:hidden}.f8-b-c{position:absolute;left:0;top:0;opacity:0;mix-blend-mode:multiply;transform-origin:50% 60%}.f8-b-c1{color:#62c6ec}.f8-b-c2{color:#e08fc8}.f8-b-c3{color:#ecd878}.is-ui.is-type .f8-b-c1{animation:f8-g1 1s cubic-bezier(.16,.84,.22,1) both,f8-cout .24s linear .44s forwards}.is-ui.is-type .f8-b-c2{animation:f8-g2 1s cubic-bezier(.16,.84,.22,1) both,f8-cout .24s linear .44s forwards}.is-ui.is-type .f8-b-c3{animation:f8-g3 1s cubic-bezier(.16,.84,.22,1) both,f8-cout .24s linear .44s forwards}.is-ui.is-type .f8-b-ink{opacity:1;visibility:visible;transition:opacity .2s linear .24s,visibility 0s linear .24s}.is-locked .f8-b-c{display:none}.is-locked .f8-b-ink{opacity:1;visibility:visible;transition:none!important}@keyframes f8-g1{0%{opacity:0;transform:translate3d(-.7%,0,0) scale3d(1.004,1.12,1)}22%{opacity:1}100%{opacity:1;transform:none}}@keyframes f8-g2{0%{opacity:0;transform:translate3d(.7%,0,0) scale3d(1.004,1.12,1)}22%{opacity:1}100%{opacity:1;transform:none}}@keyframes f8-g3{0%{opacity:0;transform:translate3d(0,3%,0) scale3d(1.004,1.12,1)}22%{opacity:1}100%{opacity:1;transform:none}}@keyframes f8-cout{to{opacity:0}}@keyframes f8-inkin{from{opacity:0}to{opacity:1}}.f8-b-bar{position:absolute;left:0;right:0;top:-9px;height:18px}.f8-b-cap{position:absolute;left:0;right:0;top:34px;display:flex;justify-content:space-between;gap:16px;font-size:11px;line-height:16px;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .5s linear .34s}.f8-b-num{margin-right:-.14em}.is-ui .f8-b-cap{opacity:.82}.is-reveal .f8-b-cap{opacity:0;transition:opacity .2s linear}.f8-b-raster,.f8-b-beam,.f8-b-glass,.f8-b-edge,.f8-b-bar>*{display:none}.is-css .f8-b-raster,.is-css .f8-b-beam,.is-css .f8-b-glass,.is-css .f8-b-edge,.is-css .f8-b-bar>*{display:block}.is-css .f8-b-gl{display:none}.f8-b-raster{position:absolute;top:-8%;right:0;bottom:-8%;left:0;background:radial-gradient(ellipse 67.6% 68.8% at 50% 50%,rgba(0,0,0,0) 0,rgba(0,0,0,.013) 20%,rgba(0,0,0,.053) 40%,rgba(0,0,0,.119) 60%,rgba(0,0,0,.212) 80%,rgba(0,0,0,.332) 100%),linear-gradient(var(--b-top,#d2d4d7),var(--b-sky,#d6d7da) 42%);-webkit-mask-image:linear-gradient(transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(transparent,#000 6%,#000 94%,transparent);animation:f8-open .36s cubic-bezier(.1,.72,.16,1) .3s both}.f8-b-flash{position:absolute;top:0;right:0;bottom:0;left:0;background:#f8f9fc;animation:f8-flash 1.05s cubic-bezier(.3,.1,.3,1) .3s both}.f8-b-beam{position:absolute;left:-2%;right:-2%;top:50%;height:64px;margin-top:-32px;background:radial-gradient(ellipse 50% 50% at 50% 50%,#fff 0,#fff 5%,rgba(236,240,255,.62) 13%,rgba(214,224,255,.18) 36%,rgba(214,224,255,0) 72%);animation:f8-beam .6s linear both}.f8-b-glass,.f8-b-edge{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none}.f8-b-edge{background:var(--f8-edge) 0 0/100% 100% no-repeat}.f8-b-fill{position:absolute;left:0;right:0;top:calc(9px - var(--bw) * .0048);height:calc(var(--bw) * .0096);border-radius:1px;background:currentColor;transform:scaleX(0);transform-origin:0 50%;transition:transform .26s linear}.f8-b-bead{position:absolute;left:0;top:0;width:18px;height:18px;transition:transform .26s linear;will-change:transform}.f8-b-bead>i{display:block;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 37% 30%,#f4f6fa 0,#b7bcc6 7%,#3a3c43 19%,#101115 46%,#040405 100%);box-shadow:0 1px 2px rgba(0,0,0,.28)}.is-css .f8-b-bar:before{content:'';position:absolute;left:0;right:0;top:8.5px;height:1px;background:currentColor;opacity:.24}@keyframes f8-open{0%{transform:scale3d(1,.004,1);opacity:0}1%{opacity:1}100%{transform:none;opacity:1}}@keyframes f8-flash{0%{opacity:.96}16%{opacity:.84}100%{opacity:0}}@keyframes f8-beam{0%{opacity:0;transform:scale3d(.006,.3,1)}12%{opacity:1;transform:scale3d(.012,.3,1)}30%{opacity:1;transform:scale3d(.034,.26,1);animation-timing-function:cubic-bezier(.3,.02,.1,1)}60%{opacity:1;transform:scale3d(1,.15,1)}76%{opacity:.92;transform:scale3d(1,.5,1)}100%{opacity:0;transform:scale3d(1,3.4,1)}}.is-reveal{background:none}.is-reveal .f8-b-gl{background:none}.is-css.is-reveal .f8-b-raster,.is-css.is-reveal .f8-b-glass,.is-css.is-reveal .f8-b-edge{animation:none;opacity:0;transition:opacity .4s linear}.is-fade{opacity:0;transition:opacity .55s linear}.is-fade .f8-b-ui{opacity:0;transition:opacity .18s linear}.is-css .f8-b-bar{opacity:0}.is-css.is-ui .f8-b-bar{opacity:1;transition:opacity .5s linear}@media (max-width:600px){.f8-boot{--bw:min(70vw,320px)}.f8-b-cap{top:30px}.f8-b-mark{bottom:26px}}@media (prefers-reduced-motion:reduce){.f8-b-raster,.f8-b-flash{animation:none!important}.f8-b-flash,.f8-b-beam{display:none!important}.f8-b-c{display:none}.is-ui.is-type .f8-b-ink{transition:opacity .4s linear!important}}</style>
+<noscript><style>.f8-boot{display:none}</style></noscript>
+</head>
+<body>
+<div class="f8-boot" id="f8-boot" role="progressbar" aria-label="Loading FERRO-88" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="f8-b-beam"></div><div class="f8-b-raster"><div class="f8-b-flash"></div></div><div class="f8-b-glass"></div><canvas class="f8-b-gl" aria-hidden="true"></canvas><div class="f8-b-ui"><div class="f8-b-mark"><span class="f8-b-c f8-b-c1" aria-hidden="true">FERRO-88</span><span class="f8-b-c f8-b-c2" aria-hidden="true">FERRO-88</span><span class="f8-b-c f8-b-c3" aria-hidden="true">FERRO-88</span><span class="f8-b-ink">FERRO-88</span></div><div class="f8-b-bar"><i class="f8-b-fill"></i><b class="f8-b-bead"><i></i></b></div><div class="f8-b-cap"><span class="f8-b-text">Warming up the tube</span><span class="f8-b-num">0</span></div></div><div class="f8-b-edge"></div></div>
+<script>if(!/[?&]f88noboot\b/.test(location.search))F8Boot.attach(document.getElementById("f8-boot"))</script>
+<link rel="stylesheet" href="./portfolio.css?v=f209b28e">
+<link rel="stylesheet" href="./fonts/fonts.css" media="print" onload="this.media='all';window.F8Boot&&F8Boot.fontSheet()" onerror="window.F8Boot&&F8Boot.fontSheet()">
+<div id="dc-root"></div>
+<template id="dc-tpl"><div class="{{ rootClass }}" ref="{{ rootRef }}" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden; background: {{ t.bg }}; color: {{ t.ink }}; font-family: 'JetBrains Mono', ui-monospace, monospace; min-width: 320px; transition: color 0.6s; --bg: {{ t.bg }}; --line: {{ t.line }}; --soft: {{ t.soft }}; --page: {{ t.page }}; --rim: {{ t.rim }}; --bar: {{ barPx }}">
+  <canvas ref="{{ stageRef }}" data-ferro-stage="orb" role="img" aria-label="A glossy black ferrofluid droplet floating on a curved CRT screen, growing spikes toward whatever pulls it" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; display: block; z-index: 0"></canvas>
+  <div class="f8-glass" aria-hidden="true" style="position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; background: {{ scanBg }}; pointer-events: none; opacity: {{ scanOpacity }}"></div>
+
+  <canvas class="f8-field" data-sec="{{ fieldSec }}" aria-hidden="true"></canvas>
+
+  <section class="{{ homeClass }}" data-scr="home" ref="{{ homeRef }}" aria-label="FERRO-88 system menu with an interactive ferrofluid droplet" aria-hidden="{{ homeHidden }}" onScroll="{{ scrScroll }}">
+    <div class="f8-hero">
+      <div class="f8-window" aria-hidden="true"></div>
+      <nav class="f8-menu" aria-label="System menu" style="position: absolute; left: var(--edge-x); top: 230px; display: flex; flex-direction: column; gap: 18px; color: {{ t.ink }}">
+        <sc-for list="{{ menu }}" as="m" hint-placeholder-count="4">
+          <a class="f8-item" href="{{ m.href }}" data-go="{{ m.id }}" draggable="false" onMouseEnter="{{ m.enter }}" onMouseLeave="{{ m.leave }}" onFocus="{{ m.enter }}" onBlur="{{ m.leave }}" onPointerDown="{{ m.down }}" onPointerUp="{{ m.up }}" onClick="{{ m.click }}" style="display: flex; align-items: center; gap: 20px; min-height: 48px; color: inherit; text-decoration: none; --i: {{ m.i }}">
+            <span class="f8-slot" aria-hidden="true" style="flex: none; width: 22px; height: 40px; border: 1.6px solid currentColor; border-radius: 5px; background: {{ m.slot }}; opacity: {{ m.opacity }}"></span>
+            <span class="f8-itext" style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+              <span class="f8-label" style="font-family: 'Michroma', sans-serif; font-size: 50px; line-height: 1; letter-spacing: 0.04em; opacity: {{ m.opacity }}">{{ m.label }}</span>
+              <span class="f8-cap" style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase">{{ m.cap }}</span>
+            </span>
+          </a>
+        </sc-for>
+      </nav>
+      <div class="f8-start" style="position: absolute; left: var(--edge-x); bottom: var(--edge-b); display: flex; flex-direction: column; gap: 10px; color: {{ t.ink }}">
+        <span class="f8-press" style="font-family: 'Doto', monospace; font-weight: 900; font-size: 26px; letter-spacing: 0.14em; animation: {{ pressAnim }}">{{ pressText }}</span>
+      </div>
+      <div class="f8-status" role="status" aria-live="off" style="position: absolute; right: var(--edge-x); bottom: var(--edge-b); display: flex; gap: 22px; font-family: 'Doto', monospace; font-weight: 900; font-size: 18px; letter-spacing: 0.08em; color: {{ t.ink }}">
+        <span>CH {{ channel }}</span><span>{{ note }}</span><span class="f8-wide">{{ musicState }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="{{ aboutClass }}" data-scr="about" ref="{{ aboutRef }}" aria-label="About" aria-hidden="{{ aboutHidden }}" onScroll="{{ scrScroll }}">
+    <div class="f8-sec">
+      <h2 class="f8-h2 f8-big f8-p" tabindex="-1">About</h2>
+      <p class="f8-statement f8-p" hidden="{{ profile.hideBio }}"><span class="f8-base" data-base="1"></span>{{ profile.bio }}</p>
+      <dl class="f8-facts">
+        <sc-for list="{{ profile.facts }}" as="fact">
+          <div class="{{ fact.style }}"><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>
+        </sc-for>
+      </dl>
+    </div>
+  </section>
+
+  <section class="{{ worksClass }}" data-scr="works" ref="{{ worksRef }}" aria-label="Works" aria-hidden="{{ worksHidden }}" onScroll="{{ scrScroll }}">
+    <div class="f8-sec f8-sec-works">
+      <div class="f8-head f8-p"><h2 class="f8-h2 f8-small" tabindex="-1">Works</h2><span class="f8-note" hidden="{{ profile.hideProjects }}">Selected projects</span></div>
+      <ol class="f8-works">
+        <sc-for list="{{ projects }}" as="p">
+          <li class="f8-p">
+            <sc-for list="{{ p.links }}" as="url">
+              <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="f8-row" aria-current="{{ p.on }}" aria-label="{{ p.aria }}" onMouseEnter="{{ p.pick }}" onFocus="{{ p.pick }}" onClick="{{ p.click }}"><span class="f8-rt"><span class="f8-base" data-base="1"></span>{{ p.title }}</span><span class="f8-rm"><span hidden="{{ p.hideMeta }}">{{ p.meta }}</span><span hidden="{{ p.hideYear }}">{{ p.year }}</span></span></a>
+            </sc-for>
+            <sc-for list="{{ p.buttons }}" as="button">
+              <button type="button" class="f8-row" aria-current="{{ p.on }}" aria-label="{{ p.aria }}" onMouseEnter="{{ p.pick }}" onFocus="{{ p.pick }}" onClick="{{ p.click }}"><span class="f8-rt"><span class="f8-base" data-base="1"></span>{{ p.title }}</span><span class="f8-rm"><span hidden="{{ p.hideMeta }}">{{ p.meta }}</span><span hidden="{{ p.hideYear }}">{{ p.year }}</span></span></button>
+            </sc-for>
+          </li>
+        </sc-for>
+      </ol>
+      <sc-for list="{{ projectArt }}" as="number"><div class="f8-art f8-p" aria-hidden="true">{{ number }}</div></sc-for>
+    </div>
+  </section>
+
+  <section class="{{ philosophyClass }}" data-scr="philosophy" ref="{{ philosophyRef }}" aria-label="Philosophy" aria-hidden="{{ philosophyHidden }}" onScroll="{{ scrScroll }}">
+    <div class="f8-sec">
+      <h2 class="f8-h2 f8-small f8-p" tabindex="-1">Philosophy</h2>
+      <p class="f8-para f8-p" hidden="{{ profile.hidePhilosophy }}"><span class="f8-base" data-base="1"></span>{{ profile.philosophy }}<span class="f8-base" data-rest="1"></span></p>
+    </div>
+  </section>
+
+  <section class="{{ contactClass }}" data-scr="contact" ref="{{ contactRef }}" aria-label="Contact" aria-hidden="{{ contactHidden }}" onScroll="{{ scrScroll }}">
+    <div class="f8-sec">
+      <h2 class="f8-h2 f8-big f8-p" tabindex="-1">Contact</h2>
+      <sc-for list="{{ profile.emails }}" as="mail"><div class="f8-p"><a class="f8-email" href="{{ mail.href }}" onClick="{{ ctaClick }}"><span class="f8-base" data-base="1"></span>{{ mail.address }}</a></div></sc-for>
+      <p class="f8-replies f8-p" hidden="{{ profile.hideReply }}">{{ profile.replyNote }}</p>
+      <div class="f8-socials f8-p" hidden="{{ profile.hideSocials }}"><sc-for list="{{ profile.socials }}" as="social"><a href="{{ social.url }}" target="_blank" rel="noopener noreferrer">{{ social.label }}</a></sc-for></div>
+      <footer class="f8-colo f8-p"><span hidden="{{ profile.hideFooter }}">{{ profile.footer }}</span><span>FM voices, chimes and CRT hum synthesised live, no samples.</span></footer>
+    </div>
+  </section>
+
+  <header class="{{ topClass }}" ref="{{ topRef }}" style="position: fixed; z-index: 3; top: var(--edge-y); left: var(--edge-x); right: var(--edge-x); display: flex; align-items: center; justify-content: space-between; gap: 24px; color: {{ t.ink }}">
+    <div class="f8-brand" style="display: flex; align-items: center; gap: 16px">
+      <svg class="f8-logo" width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><rect x="1.5" y="1.5" width="43" height="43" rx="11" fill="none" stroke="currentColor" stroke-width="1.6"></rect><circle cx="23" cy="21" r="8.5" fill="currentColor"></circle><path d="M18 28l2 6 2-5 1 6 1.5-6 2 5 1.5-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg>
+      <div class="f8-brandtext">
+        <div class="f8-name" style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+          <span style="font-family: 'Michroma', sans-serif; font-size: 14px; letter-spacing: 0.12em">FERRO-88</span>
+          <span class="f8-sub" style="font-size: 11px; letter-spacing: 0.08em">{{ profile.name }}<span class="f8-ver"> · system v1.0</span></span>
+        </div>
+        <button class="f8-back f8-pill" type="button" onClick="{{ goHome }}" aria-label="Back to the menu" style="justify-self: start; display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 18px 0 14px; border: 1.6px solid currentColor; border-radius: 999px; background: rgba(255,255,255,0.12); color: inherit; font: inherit; font-size: 12px; letter-spacing: 0.14em; cursor: pointer; white-space: nowrap">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>MENU</span>
+        </button>
+      </div>
+    </div>
+    <div class="f8-ctrl" style="display: flex; align-items: center; gap: 12px">
+      <span class="f8-clock" style="font-family: 'Doto', monospace; font-weight: 900; font-size: 18px; letter-spacing: 0.06em">{{ clock }}</span>
+      <div class="{{ volClass }}" onPointerEnter="{{ volEnter }}" onPointerLeave="{{ volLeave }}" onFocus="{{ volFocus }}" onBlur="{{ volBlur }}">
+        <span class="f8-volpop" aria-hidden="true"></span>
+        <button class="f8-round" onPointerDown="{{ musicDown }}" onPointerCancel="{{ musicCancel }}" onClick="{{ toggleMusic }}" aria-pressed="{{ musicPressed }}" aria-label="Toggle self-playing music" style="width: 46px; height: 46px; border-radius: 50%; border: 1.6px solid currentColor; background: rgba(255,255,255,0.12); color: inherit; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ musicOpacity }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 15V4.5l9-2V13"></path><circle cx="5.5" cy="15" r="2"></circle><circle cx="14.5" cy="13" r="2"></circle></g></svg>
+        </button>
+        <button class="f8-round" onClick="{{ toggleSound }}" aria-pressed="{{ soundPressed }}" aria-label="Toggle sound" style="width: 46px; height: 46px; border-radius: 50%; border: 1.6px solid currentColor; background: rgba(255,255,255,0.12); color: inherit; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: {{ soundOpacity }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3l4-3.5v11L6 12H3z"></path><path data-hole-d="{{ soundWave }}"></path></g></svg>
+        </button>
+        <div class="f8-volctl">
+          <span class="f8-volbars" aria-hidden="true" style="opacity: {{ volDim }}">
+            <sc-for list="{{ volBars }}" as="b" hint-placeholder-count="10"><span class="f8-volbar" style="{{ b.style }}"></span></sc-for>
+          </span>
+          <input class="f8-volin" type="range" min="0" max="10" step="1" value="{{ volValue }}" onChange="{{ setVol }}" aria-label="Volume" aria-valuetext="{{ volText }}">
+          <span class="f8-volhit" aria-hidden="true" onPointerDown="{{ volDown }}" onPointerMove="{{ volMove }}"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <nav class="{{ chanClass }}" aria-label="Sections">
+    <sc-for list="{{ chans }}" as="c" hint-placeholder-count="4"><button class="f8-chan" type="button" aria-current="{{ c.cur }}" onMouseEnter="{{ c.warm }}" onFocus="{{ c.warm }}" onPointerDown="{{ c.warm }}" onClick="{{ c.go }}"><span><span class="f8-n">{{ c.n }} </span>{{ c.name }}</span></button></sc-for>
+  </nav>
+</div></template>
+<noscript><div style="position:fixed;top:0;left:0;right:0;bottom:0;overflow:auto;padding:32px;background:#d6d7da;color:#15161a;font:16px/1.5 sans-serif"><h1 style="font-size:28px;margin:0 0 12px">FERRO-88</h1><p>Enable JavaScript to open this interactive portfolio.</p></div></noscript>
+</body>
+</html>
