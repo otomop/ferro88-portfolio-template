@@ -9,7 +9,6 @@ A standalone HTML, CSS, and JavaScript portfolio with an interactive ferrofluid 
 1. Download the template and extract it into a folder, or choose **Use this template** on GitHub to start your own repository.
 2. Replace the bracketed placeholders in [`index.html`](./index.html) with your name, bio, skills, philosophy, project details, and contact information. Update the email and social link destinations as well as their visible labels.
 3. Project rows are musical selection buttons. Their rendering and accessibility labels are defined in [`site.min.js`](./site.min.js). Keep those labels consistent with your project details.
-4. Put your project files in the same folder or its subfolders. Use relative paths such as `./projects/project.html`, or HTTPS addresses for files hosted elsewhere.
 
 ## Preview locally
 
@@ -19,7 +18,7 @@ If you have Python 3, start a local server from the directory containing `index.
 python -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open [the local preview](http://127.0.0.1:8000/). Try each section and check your project and contact links. Use `Ctrl+C` in the terminal to stop the preview.
+Open [the local preview](http://127.0.0.1:8000/). Try each section and check your email and social links. Use `Ctrl+C` in the terminal to stop the preview.
 
 ## Publish anywhere
 
