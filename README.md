@@ -20,6 +20,17 @@ python -m http.server 8000 --bind 127.0.0.1
 
 Open [the local preview](http://127.0.0.1:8000/). Try each section and check your email and social links. Use `Ctrl+C` in the terminal to stop the preview.
 
+## Performance and diagnostics
+
+The droplet is drawn live in WebGL2. The engine measures the display's refresh rate and its own GPU time, locks drawing to a steady cadence when a frame cannot fit one refresh, and lowers the droplet's render scale on phones before it lowers the frame rate. Devices without WebGL2 get a still picture of the droplet with plain cross-fades.
+
+Add a query parameter to the address for diagnostics:
+
+- `?f88bench` shows a benchmark panel. Tap **RUN TOUR**, leave the screen alone for about 30 seconds, then **COPY** the report (frame intervals, GPU time, render scale and cadence per state).
+- `?ferroq=0.7` pins the droplet's render scale (0.45 to 1), `?ferrogov=0` turns the cadence lock off.
+
+Serve the site with compression enabled (GitHub Pages and most hosts do): the scripts shrink from about 250 KB to 90 KB.
+
 ## Publish anywhere
 
 Upload the contents of the template folder to your web host. Keep `index.html` at the top of the published folder and preserve the `fonts/` directory and the files beside it. If your host asks for a build command, leave it empty. Use the directory containing `index.html` as the publish directory.
